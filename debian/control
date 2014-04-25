@@ -1,0 +1,18 @@
+Source: python-social-auth
+Maintainer: KURASHIKI Satoru <lurdan@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7)
+Standards-Version: 3.9.5
+Homepage: http://psa.matiasaguirre.net
+
+Package: python-social-auth
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Python social authentication made simple
+ Python Social Auth is an easy-to-setup social authentication/registration
+ mechanism with support for several frameworks and auth providers.
+ .
+ Crafted using base code from django-social-auth, it implements a common
+ interface to define new authentication providers from third parties,
+ and to bring support for more frameworks and ORMs.

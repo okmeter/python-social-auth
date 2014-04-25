@@ -1,0 +1,5 @@
+python-social-auth (0.1.23-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #743022)
+
+ -- KURASHIKI Satoru <lurdan@gmail.com>  Thu, 03 Apr 2014 20:50:31 +0900
