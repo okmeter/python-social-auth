@@ -1,10 +1,10 @@
 Source: python-social-auth
-Maintainer: KURASHIKI Satoru <lurdan@gmail.com>
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
 Section: python
 Priority: optional
-Build-Depends: python-setuptools (>= 0.6b3), python-all (>= 2.6.6-3), debhelper (>= 7)
-Standards-Version: 3.9.5
-Uploaders: W. Martin Borgert <debacle@debian.org>
+Build-Depends: python-all (>= 2.7~), python-setuptools, debhelper (>= 9), python3-all, python3-setuptools
+Standards-Version: 3.9.6
+Uploaders: KURASHIKI Satoru <lurdan@gmail.com>, W. Martin Borgert <debacle@debian.org>
 Homepage: http://psa.matiasaguirre.net
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/python-social-auth.git
 Vcs-Git: git://anonscm.debian.org/collab-maint/python-social-auth.git
@@ -19,3 +19,18 @@ Description: Python social authentication made simple
  Crafted using base code from django-social-auth, it implements a common
  interface to define new authentication providers from third parties,
  and to bring support for more frameworks and ORMs.
+ .
+ This package provides the Python 2.x module.
+
+Package: python3-social-auth
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: Python social authentication made simple
+ Python Social Auth is an easy-to-setup social authentication/registration
+ mechanism with support for several frameworks and auth providers.
+ .
+ Crafted using base code from django-social-auth, it implements a common
+ interface to define new authentication providers from third parties,
+ and to bring support for more frameworks and ORMs.
+ .
+ This package provides the Python 3.x module.

@@ -1,6 +1,17 @@
 #!/usr/bin/make -f
 
+#export DH_VERBOSE=1
+export PYBUILD_NAME=social-auth
+# testing disabled for now, because it insists on an older version of nose
+export PYBUILD_DISABLE=test
+
+# prevent setuptools/distribute from accessing the internet
+export http_proxy = http://127.0.9.1:9
+export https_proxy = https://127.0.9.1:9
+
 %:
-	dh $@ --with python2 --buildsystem=python_distutils
+	dh $@ --with python2,python3 --buildsystem=pybuild
 
-
+override_dh_installdocs:
+	cd docs/ ; $(MAKE) text
+	dh_installdocs
