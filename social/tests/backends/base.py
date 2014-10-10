@@ -20,8 +20,9 @@ class BaseBackendTest(unittest.TestCase):
 
     def setUp(self):
         HTTPretty.enable()
-        self.backend = module_member(self.backend_path)
-        self.strategy = TestStrategy(self.backend, TestStorage)
+        Backend = module_member(self.backend_path)
+        self.strategy = TestStrategy(TestStorage)
+        self.backend = Backend(self.strategy, redirect_uri=self.complete_url)
         self.name = self.backend.name.upper().replace('-', '_')
         self.complete_url = self.strategy.build_absolute_uri(
             self.raw_complete_url.format(self.backend.name)
@@ -64,7 +65,7 @@ class BaseBackendTest(unittest.TestCase):
         expect(user.username).to.equal(username)
         expect(self.strategy.session_get('username')).to.equal(username)
         expect(self.strategy.get_user(user.id)).to.equal(user)
-        expect(self.strategy.backend.get_user(user.id)).to.equal(user)
+        expect(self.backend.get_user(user.id)).to.equal(user)
         user_backends = user_backends_data(
             user,
             self.strategy.get_setting('SOCIAL_AUTH_AUTHENTICATION_BACKENDS'),
@@ -135,8 +136,8 @@ class BaseBackendTest(unittest.TestCase):
         data = self.strategy.session_pop('partial_pipeline')
         idx, backend, xargs, xkwargs = self.strategy.partial_from_session(data)
         expect(backend).to.equal(self.backend.name)
-        redirect = self.strategy.continue_pipeline(pipeline_index=idx,
-                                                   *xargs, **xkwargs)
+        redirect = self.backend.continue_pipeline(pipeline_index=idx,
+                                                  *xargs, **xkwargs)
 
         url = self.strategy.build_absolute_uri('/slug')
         expect(redirect.url).to.equal(url)
@@ -146,8 +147,8 @@ class BaseBackendTest(unittest.TestCase):
         data = self.strategy.session_pop('partial_pipeline')
         idx, backend, xargs, xkwargs = self.strategy.partial_from_session(data)
         expect(backend).to.equal(self.backend.name)
-        user = self.strategy.continue_pipeline(pipeline_index=idx,
-                                               *xargs, **xkwargs)
+        user = self.backend.continue_pipeline(pipeline_index=idx,
+                                              *xargs, **xkwargs)
 
         expect(user.username).to.equal(self.expected_username)
         expect(user.slug).to.equal(slug)

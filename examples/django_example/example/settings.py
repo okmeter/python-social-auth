@@ -123,6 +123,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.angel.AngelOAuth2',
     'social.backends.aol.AOLOpenId',
     'social.backends.appsfuel.AppsfuelOAuth2',
+    'social.backends.beats.BeatsOAuth2',
     'social.backends.behance.BehanceOAuth2',
     'social.backends.belgiumeid.BelgiumEIDOpenId',
     'social.backends.bitbucket.BitbucketOAuth',
@@ -133,6 +134,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.disqus.DisqusOAuth2',
     'social.backends.douban.DoubanOAuth2',
     'social.backends.dropbox.DropboxOAuth',
+    'social.backends.dropbox.DropboxOAuth2',
     'social.backends.evernote.EvernoteSandboxOAuth',
     'social.backends.facebook.FacebookAppOAuth2',
     'social.backends.facebook.FacebookOAuth2',
@@ -145,6 +147,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
     'social.backends.google.GoogleOpenId',
     'social.backends.google.GooglePlusAuth',
+    'social.backends.google.GoogleOpenIdConnect',
     'social.backends.instagram.InstagramOAuth2',
     'social.backends.jawbone.JawboneOAuth2',
     'social.backends.linkedin.LinkedinOAuth',
@@ -168,6 +171,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.runkeeper.RunKeeperOAuth2',
     'social.backends.skyrock.SkyrockOAuth',
     'social.backends.soundcloud.SoundcloudOAuth2',
+    'social.backends.spotify.SpotifyOAuth2',
     'social.backends.stackoverflow.StackoverflowOAuth2',
     'social.backends.steam.SteamOpenId',
     'social.backends.stocktwits.StocktwitsOAuth2',
@@ -188,6 +192,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.yandex.YandexOAuth2',
     'social.backends.vimeo.VimeoOAuth1',
     'social.backends.lastfm.LastFmAuth',
+    'social.backends.moves.MovesOAuth2',
     'social.backends.email.EmailAuth',
     'social.backends.username.UsernameAuth',
     'django.contrib.auth.backends.ModelBackend',
@@ -222,8 +227,12 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
+    'social.pipeline.user.user_details',
+    #'social.pipeline.debug.debug'
 )
+
+# SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['first_name', 'last_name', 'email',
+#                                         'username']
 
 try:
     from example.local_settings import *

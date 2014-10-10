@@ -33,9 +33,8 @@ Recently Google launched OAuth2 support following the definition at `OAuth2 draf
 It works in a similar way to plain OAuth mechanism, but developers **must** register
 an application and apply for a set of keys. Check `Google OAuth2`_ document for details.
 
-**Note**:
-  This support is experimental as Google implementation may change and OAuth2 is still
-  a draft.
+When creating the application in the Google Console be sure to fill the
+``PRODUCT NAME`` at ``API & auth -> Consent screen`` form.
 
 To enable OAuth2 support:
 
@@ -167,6 +166,53 @@ or::
 
 depending on the backends in use.
 
+
+Refresh Tokens
+--------------
+
+To get an OAuth2 refresh token along with the access token, you must pass an extra argument: ``access_type=offline``.
+To do this with Google+ sign-in::
+
+      SOCIAL_AUTH_GOOGLE_PLUS_AUTH_EXTRA_ARGUMENTS = {
+            'access_type': 'offline'
+      }
+
+
+Scopes deprecation
+------------------
+
+Google is deprecating the full-url scopes from `Sept 1, 2014`_ in favor of
+``Google+ API`` and the recently introduced shorter scopes names. But
+``python-social-auth`` already introduced the scopes change at e3525187_ which
+was released at ``v0.1.24``.
+
+But, to enable the new scopes the application requires ``Google+ API`` to be
+enabled in the `Google console`_ dashboard, the change is quick and quite
+simple, but if any developer desires to keep using the old scopes, it's
+possible with the following settings::
+
+    # Google OAuth2 (google-oauth2)
+    SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+    ]
+
+    # Google+ SignIn (google-plus)
+    SOCIAL_AUTH_GOOGLE_PLUS_IGNORE_DEFAULT_SCOPE = True
+    SOCIAL_AUTH_GOOGLE_PLUS_SCOPE = [
+        'https://www.googleapis.com/auth/plus.login',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+    ]
+
+To ease the change, the old API and scopes is still supported by the
+application, the new values are the default option but if having troubles
+supporting them you can default to the old values by defining this setting::
+
+    SOCIAL_AUTH_GOOGLE_OAUTH2_USE_DEPRECATED_API = True
+    SOCIAL_AUTH_GOOGLE_PLUS_USE_DEPRECATED_API = True
+
 .. _Google support: http://www.google.com/support/a/bin/answer.py?hl=en&answer=162105
 .. _Orkut API:  http://code.google.com/apis/orkut/docs/rest/developers_guide_protocol.html#Authenticating
 .. _Google OpenID: http://code.google.com/apis/accounts/docs/OpenID.html
@@ -180,3 +226,5 @@ depending on the backends in use.
 .. _whitelists: ../configuration/settings.html#whitelists
 .. _Google+ Sign In: https://developers.google.com/+/web/signin/
 .. _Google console: https://code.google.com/apis/console
+.. _Sept 1, 2014: https://developers.google.com/+/api/auth-migration#timetable
+.. _e3525187: https://github.com/omab/python-social-auth/commit/e35251878a88954cecf8e575eca27c63164b9f67
