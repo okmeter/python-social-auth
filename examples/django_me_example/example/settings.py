@@ -164,6 +164,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.xing.XingOAuth',
     'social.backends.yandex.YandexOAuth2',
     'social.backends.douban.DoubanOAuth2',
+    'social.backends.mineid.MineIDOAuth2',
     'social.backends.mixcloud.MixcloudOAuth2',
     'social.backends.rdio.RdioOAuth1',
     'social.backends.rdio.RdioOAuth2',
@@ -210,6 +211,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'
 )
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 try:
     from example.local_settings import *

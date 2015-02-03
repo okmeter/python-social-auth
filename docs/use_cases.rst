@@ -116,7 +116,8 @@ code follows Django conventions, but versions for others frameworks can be
 implemented easily)::
 
     from django.contrib.auth import login
-    from social.apps.django_app.utils import strategy
+
+    from social.apps.django_app.utils import psa
 
     # Define an URL entry to point to this view, call it passing the
     # access_token parameter like ?access_token=<token>. The URL entry must
@@ -125,12 +126,13 @@ implemented easily)::
     #   url(r'^register-by-token/(?P<backend>[^/]+)/$',
     #       'register_by_access_token')
 
-    @strategy('social:complete')
+    @psa('social:complete')
     def register_by_access_token(request, backend):
-        # This view expects an access_token GET parameter
+        # This view expects an access_token GET parameter, if it's needed,
+        # request.backend and request.strategy will be loaded with the current
+        # backend and strategy.
         token = request.GET.get('access_token')
-        backend = request.strategy.backend
-        user = backend.do_auth(request.GET.get('access_token'))
+        user = request.backend.do_auth(request.GET.get('access_token'))
         if user:
             login(request, user)
             return 'OK'
@@ -204,6 +206,95 @@ accomplish that behavior, there are two ways to do it.
    ``/login/facebook-custom`` and then get the social auth entry for this new
    backend with ``user.social_auth.get(provider='facebook-custom')`` and use
    the ``access_token`` in it.
+
+
+Enable a user to choose a username from his World of Warcraft characters
+------------------------------------------------------------------------
+
+If you want to register new users on your site via battle.net, you can enable
+these users to choose a username from their own World-of-Warcraft characters.
+To do this, use the ``battlenet-oauth2`` backend along with a small form to
+choose the username.
+
+The form is rendered via a partial pipeline item like this::
+
+    @partial
+    def pick_character_name(backend, details, response, is_new=False, *args, **kwargs):
+        if backend.name == 'battlenet-oauth2' and is_new:
+            data = backend.strategy.request_data()
+            if data.get('character_name') is None:
+                # New user and didn't pick a character name yet, so we render
+                # and send a form to pick one. The form must do a POST/GET
+                # request to the same URL (/complete/battlenet-oauth2/). In this
+                # example we expect the user option under the key:
+                #   character_name
+                # you have to filter the result list according to your needs.
+                # In this example, only guild members are allowed to sign up.
+                char_list = [
+                    c['name'] for c in backend.get_characters(response.get('access_token'))
+                        if 'guild' in c and c['guild'] == '<guild name>'
+                ]
+                return render_to_response('pick_character_form.html', {'charlist': char_list, })
+            else:
+                # The user selected a character name
+                return {'username': data.get('character_name')}
+
+Don't forget to add the partial to the pipeline::
+
+    SOCIAL_AUTH_PIPELINE = (
+        'social.pipeline.social_auth.social_details',
+        'social.pipeline.social_auth.social_uid',
+        'social.pipeline.social_auth.auth_allowed',
+        'social.pipeline.social_auth.social_user',
+        'social.pipeline.user.get_username',
+        'path.to.pick_character_name',
+        'social.pipeline.user.create_user',
+        'social.pipeline.social_auth.associate_user',
+        'social.pipeline.social_auth.load_extra_data',
+        'social.pipeline.user.user_details',
+    )
+
+It needs to be somewhere before create_user because the partial will change the
+username according to the users choice.
+
+
+Re-prompt Google OAuth2 users to refresh the ``refresh_token``
+--------------------------------------------------------------
+
+A ``refresh_token`` also expire, a ``refresh_token`` can be lost, but they can
+also be refreshed (or re-fetched) if you ask to Google the right way. In order
+to do so, set this setting::
+
+    SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
+        'access_type': 'offline',
+        'approval_prompt': 'auto'
+    }
+
+Then link the users to ``/login/google-oauth2?approval_prompt=force``. If you
+want to refresh the ``refresh_token`` only on those users that don't  have it,
+do it with a pipeline function::
+
+    def redirect_if_no_refresh_token(backend, response, social, *args, **kwargs):
+        if backend.name == 'google-oauth2' and social and \
+           response.get('refresh_token') is None and \
+           social.extra_data.get('refresh_token') is None:
+            return redirect('/login/google-oauth2?approval_prompt=force')
+
+Set this pipeline after ``social_user``::
+
+    SOCIAL_AUTH_PIPELINE = (
+        'social.pipeline.social_auth.social_details',
+        'social.pipeline.social_auth.social_uid',
+        'social.pipeline.social_auth.auth_allowed',
+        'social.pipeline.social_auth.social_user',
+        'import.path.to.redirect_if_no_refresh_token',
+        'social.pipeline.user.get_username',
+        'social.pipeline.user.create_user',
+        'social.pipeline.social_auth.associate_user',
+        'social.pipeline.social_auth.load_extra_data',
+        'social.pipeline.user.user_details',
+    )
+
 
 .. _python-social-auth: https://github.com/omab/python-social-auth
 .. _People API endpoint: https://developers.google.com/+/api/latest/people/list

@@ -50,6 +50,7 @@ Social backends
    angel
    aol
    appsfuel
+   battlenet
    beats
    behance
    belgium_eid
@@ -73,6 +74,7 @@ Social backends
    instagram
    jawbone
    kakao
+   khanacademy
    lastfm
    linkedin
    livejournal
@@ -81,8 +83,10 @@ Social backends
    mailru
    mapmyfitness
    mendeley
+   mineid
    mixcloud
    moves
+   nationbuilder
    odnoklassnikiru
    openstreetmap
    persona
@@ -94,8 +98,10 @@ Social backends
    readability
    reddit
    runkeeper
+   salesforce
    shopify
    skyrock
+   slack
    soundcloud
    spotify
    suse

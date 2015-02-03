@@ -60,7 +60,7 @@ class BaseGoogleOAuth2API(BaseGoogleAuth):
                 default_scope = self.DEPRECATED_DEFAULT_SCOPE
             else:
                 default_scope = self.DEFAULT_SCOPE
-            scope += default_scope or []
+            scope = scope + (default_scope or [])
         return scope
 
     def user_data(self, access_token, *args, **kwargs):
@@ -84,7 +84,8 @@ class GoogleOAuth2(BaseGoogleOAuth2API, BaseOAuth2):
     ACCESS_TOKEN_METHOD = 'POST'
     REVOKE_TOKEN_URL = 'https://accounts.google.com/o/oauth2/revoke'
     REVOKE_TOKEN_METHOD = 'GET'
-    DEFAULT_SCOPE = ['email', 'profile']
+    # The order of the default scope is important
+    DEFAULT_SCOPE = ['openid', 'email', 'profile']
     DEPRECATED_DEFAULT_SCOPE = [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile'
@@ -135,7 +136,7 @@ class GooglePlusAuth(BaseGoogleOAuth2API, BaseOAuth2):
         return params
 
     def auth_complete(self, *args, **kwargs):
-        if 'access_token' in self.data and not 'code' in self.data:
+        if 'access_token' in self.data and 'code' not in self.data:
             raise AuthMissingParameter(self, 'access_token or code')
 
         # Token won't be available in plain server-side workflow

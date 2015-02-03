@@ -77,6 +77,8 @@ or current ones extended):
     * Google_ OAuth1, OAuth2 and OpenId
     * Instagram_ OAuth2
     * Jawbone_ OAuth2 https://jawbone.com/up/developer/authentication
+    * Kakao_ OAuth2 https://developer.kakao.com
+    * `Khan Academy`_ OAuth1
     * Linkedin_ OAuth1
     * Live_ OAuth2
     * Livejournal_ OpenId
@@ -90,7 +92,6 @@ or current ones extended):
     * OpenId_
     * OpenStreetMap_ OAuth1 http://wiki.openstreetmap.org/wiki/OAuth
     * OpenSuse_ OpenId http://en.opensuse.org/openSUSE:Connect
-    * Orkut_ OAuth1
     * PixelPin_ OAuth2
     * Pocket_ OAuth2
     * Podio_ OAuth2
@@ -188,6 +189,19 @@ Or::
     $ cd python-social-auth
     $ sudo python setup.py install
 
+    
+Upgrading
+---------
+
+Django with South
+~~~~~~~~~~~~~~~~~
+
+Upgrading from 0.1 to 0.2 is likely to cause problems trying to apply a migration when the tables 
+already exist. In this case a fake migration needs to be applied::
+
+    $ python manage.py migrate --fake default
+
+
 Support
 ---------------------
 
@@ -234,12 +248,12 @@ check `django-social-auth LICENSE`_ for details:
 .. _Linkedin: https://www.linkedin.com
 .. _Live: https://live.com
 .. _Livejournal: http://livejournal.com
+.. _Khan Academy: https://github.com/Khan/khan-api/wiki/Khan-Academy-API-Authentication
 .. _Mailru: https://mail.ru
 .. _MapMyFitness: http://www.mapmyfitness.com/
 .. _Mixcloud: https://www.mixcloud.com
 .. _Mozilla Persona: http://www.mozilla.org/persona/
 .. _Odnoklassniki: http://www.odnoklassniki.ru
-.. _Orkut: http://www.orkut.com
 .. _Pocket: http://getpocket.com
 .. _Podio: https://podio.com
 .. _Shopify: http://shopify.com

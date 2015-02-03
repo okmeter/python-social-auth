@@ -1,6 +1,5 @@
 import requests
 
-from sure import expect
 from httpretty import HTTPretty
 
 from social.p3 import urlparse
@@ -60,7 +59,7 @@ class BaseOAuthTest(BaseBackendTest):
                                status=200,
                                body='foobar')
         HTTPretty.register_uri(self._method(self.backend.ACCESS_TOKEN_METHOD),
-                               uri=self.backend.ACCESS_TOKEN_URL,
+                               uri=self.backend.access_token_url(),
                                status=self.access_token_status,
                                body=self.access_token_body or '',
                                content_type='text/json')
@@ -75,8 +74,8 @@ class BaseOAuthTest(BaseBackendTest):
         start_url = self.backend.start().url
         target_url = self.auth_handlers(start_url)
         response = requests.get(start_url)
-        expect(response.url).to.equal(target_url)
-        expect(response.text).to.equal('foobar')
+        self.assertEqual(response.url, target_url)
+        self.assertEqual(response.text, 'foobar')
         self.strategy.set_request_data(parse_qs(urlparse(target_url).query),
                                        self.backend)
         return self.backend.complete()
@@ -108,8 +107,7 @@ class OAuth2Test(BaseOAuthTest):
     def do_refresh_token(self):
         self.do_login()
         HTTPretty.register_uri(self._method(self.backend.REFRESH_TOKEN_METHOD),
-                               self.backend.REFRESH_TOKEN_URL or
-                               self.backend.ACCESS_TOKEN_URL,
+                               self.backend.refresh_token_url(),
                                status=200,
                                body=self.refresh_token_body)
         user = list(User.cache.values())[0]

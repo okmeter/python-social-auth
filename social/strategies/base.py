@@ -2,8 +2,6 @@ import time
 import random
 import hashlib
 
-import six
-
 from social.utils import setting_name, module_member
 from social.store import OpenIdStore, OpenIdSessionWrapper
 from social.pipeline import DEFAULT_AUTH_PIPELINE, DEFAULT_DISCONNECT_PIPELINE
@@ -34,10 +32,6 @@ class BaseStrategy(object):
     ALLOWED_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                     'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
                     '0123456789'
-    # well-known serializable types
-    SERIALIZABLE_TYPES = (dict, list, tuple, set, bool, type(None)) + \
-                         six.integer_types + six.string_types + \
-                         (six.text_type, six.binary_type,)
     DEFAULT_TEMPLATE_STRATEGY = BaseTemplateStrategy
 
     def __init__(self, storage=None, tpl=None):

@@ -4,7 +4,7 @@ Installation
 Dependencies
 ------------
 
-Dependencies that **must** be meet to use the application:
+Dependencies that **must** be met to use the application:
 
 - OpenId_ support depends on python-openid_
 
@@ -46,3 +46,13 @@ Or::
 .. _python-openid: http://pypi.python.org/pypi/python-openid/
 .. _requests-oauthlib: https://requests-oauthlib.readthedocs.org/
 .. _sqlalchemy: http://www.sqlalchemy.org/
+
+Upgrading
+---------
+
+Django with South
+~~~~~~~~~~~~~~~~~
+
+Upgrading from 0.1 to 0.2 is likely to cause problems trying to apply a migration when the tables already exist. In this case a fake migration needs to be applied:
+
+$ python manage.py migrate --fake default
