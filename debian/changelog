@@ -1,3 +1,9 @@
+python-social-auth (0.2.2-1) unstable; urgency=low
+
+  * merge master and so version up
+
+ -- Pavel Trukhanov <pavel.trukhanov@gmail.com>  Tue, 03 Feb 2015 15:02:30 +0300
+
 python-social-auth (0.2.1-2) unstable; urgency=low
 
   * Fix build-deps (closes: #764986)
